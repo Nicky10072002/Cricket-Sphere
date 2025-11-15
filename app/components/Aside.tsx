@@ -11,6 +11,7 @@ type AsideContextValue = {
   type: AsideType;
   open: (mode: AsideType) => void;
   close: () => void;
+  isOpen: (mode: AsideType) => boolean;
 };
 
 /**
@@ -83,6 +84,7 @@ Aside.Provider = function AsideProvider({children}: {children: ReactNode}) {
         type,
         open: setType,
         close: () => setType('closed'),
+        isOpen: (mode: AsideType) => type === mode,
       }}
     >
       {children}

@@ -8,6 +8,24 @@
   --color-light: #fff;
 }
 
+/* Global gradient background */
+body {
+  background: linear-gradient(135deg, #fef3c7 0%, #fef9c3 25%, #fef3c7 50%, #fde68a 75%, #fef3c7 100%);
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+/* Remove underlines from links */
+a.no-underline,
+.no-underline {
+  text-decoration: none !important;
+}
+
+a.no-underline:hover,
+.no-underline:hover {
+  text-decoration: none !important;
+}
+
 img {
   border-radius: 4px;
 }
@@ -34,7 +52,7 @@ img {
 }
 
 aside {
-  background: var(--color-light);
+  background: linear-gradient(to bottom, #fef3c7, #ffffff);
   box-shadow: 0 0 50px rgba(0, 0, 0, 0.3);
   height: 100vh;
   width: min(var(--aside-width), 100vw);
