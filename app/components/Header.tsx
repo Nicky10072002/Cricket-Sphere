@@ -169,7 +169,7 @@ function HeaderCtas({
         <NavLink 
           prefetch="intent" 
           to="/account"
-          className="p-2.5 rounded-lg text-amber-800 hover:bg-amber-100/80 transition-all duration-200 hover:scale-105 no-underline"
+          className="p-2.5 rounded-lg text-amber-800 hover:bg-amber-100/80 transition-all duration-200 hover:scale-105 no-underline "
           title="Account"
         >
           <Suspense fallback={
