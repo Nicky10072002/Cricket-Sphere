@@ -5,6 +5,7 @@ import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 import {ProductItem} from '~/components/ProductItem';
 import type {ProductItemFragment} from 'storefrontapi.generated';
+import { Image } from '@shopify/hydrogen';
 
 export const meta: Route.MetaFunction = ({data}) => {
   return [{title: `Hydrogen | ${data?.collection.title ?? ''} Collection`}];
@@ -70,8 +71,21 @@ export default function Collection() {
 
   return (
     <div className="collection">
-      <h1>{collection.title}</h1>
-      <p className="collection-description">{collection.description}</p>
+      <div className='collection-header'>
+        <div >
+      <h2 className='text-4xl font-bold mt-2 mb-4'>{collection.title}</h2>
+      {collection.description && (
+        <p className="text-gray-700 mb-6">{collection.description}</p>
+      )}
+          
+        </div>
+      {collection.image && (
+        <Image
+          data={collection.image}
+          className="w-full max-w-3xl mb-10 rounded-lg shadow"
+        />
+      )}
+      </div>
       <PaginatedResourceSection<ProductItemFragment>
         connection={collection.products}
         resourcesClassName="products-grid"
@@ -140,6 +154,13 @@ const COLLECTION_QUERY = `#graphql
       handle
       title
       description
+      image {
+        id
+        url
+        altText
+        width
+        height
+      }
       products(
         first: $first,
         last: $last,
