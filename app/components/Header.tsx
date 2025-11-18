@@ -52,7 +52,7 @@ export function Header({
           />
 
           {/* Right Side Actions */}
-          <div className="flex items-center space-x-2 md:space-x-4">
+          <div className="flex items-center justify-end space-x-2 md:space-x-4">
             <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} />
           </div>
         </div>
