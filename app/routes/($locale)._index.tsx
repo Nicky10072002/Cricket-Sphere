@@ -9,7 +9,7 @@ import type {
 import {ProductItem} from '~/components/ProductItem';
 import {FeaturedProducts} from '~/components/featuredProduct';
 import { BlogPost } from '~/components/BlogPost';
-
+import {HeroBanner} from '~/components/Hero-Banner';
 export const meta: Route.MetaFunction = () => {
   return [{title: 'Hydrogen | Home'}];
 };
@@ -70,34 +70,47 @@ export default function Homepage() {
   const data = useLoaderData<typeof loader>();
   return (
     <div className="home">
-      <FeaturedCollection collection={data.featuredCollection} />
+      <HeroBanner
+        image={{
+          id: '1',
+          url: './images/herobanner.png',
+          altText: 'Cricket Equipment',
+          width: 1920,
+          height: 800,
+        }}
+        title="Welcome to Cricket Sphere"
+        subtitle="Your one-stop shop for premium cricket equipment"
+        buttonLabel="Shop Now"
+        buttonUrl="/collections/all"
+      />
+      {/* <FeaturedCollection collection={data.featuredCollection} /> */}
       <RecommendedProducts products={data.recommendedProducts} />
       <BlogPosts blogs={data.blogs} />
     </div>
   );
 }
 
-function FeaturedCollection({
-  collection,
-}: {
-  collection: FeaturedCollectionFragment;
-}) {
-  if (!collection) return null;
-  const image = collection?.image;
-  return (
-    <Link
-      className="featured-collection"
-      to={`/collections/${collection.handle}`}
-    >
-      {image && (
-        <div className="featured-collection-image">
-          <Image data={image} sizes="100vw" />
-        </div>
-      )}
-      <h1>{collection.title}</h1>
-    </Link>
-  );
-}
+// function FeaturedCollection({
+//   collection,
+// }: {
+//   collection: FeaturedCollectionFragment;
+// }) {
+//   if (!collection) return null;
+//   const image = collection?.image;
+//   return (
+//     <Link
+//       className="featured-collection"
+//       to={`/collections/${collection.handle}`}
+//     >
+//       {image && (
+//         <div className="featured-collection-image">
+//           <Image data={image} sizes="100vw" />
+//         </div>
+//       )}
+//       <h1>{collection.title}</h1>
+//     </Link>
+//   );
+// }
 
 function RecommendedProducts({
   products,
