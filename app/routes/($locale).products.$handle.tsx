@@ -9,9 +9,9 @@ import {
   useSelectedOptionInUrlParam,
 } from '@shopify/hydrogen';
 import {ProductPrice} from '~/components/ProductPrice';
-import {ProductImage} from '~/components/ProductImage';
 import {ProductForm} from '~/components/ProductForm';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
+import ProductGallery from '~/components/ProductGallery';
 
 export const meta: Route.MetaFunction = ({data}) => {
   return [
@@ -95,13 +95,13 @@ export default function Product() {
     selectedOrFirstAvailableVariant: selectedVariant,
   });
 
-  const {title, descriptionHtml} = product;
+  const {title, descriptionHtml, images} = product;
 
   return (
     <div className="product">
-      <ProductImage image={selectedVariant?.image} />
-      <div className="product-main">
-        <h1>{title}</h1>
+      <ProductGallery images={images?.nodes ?? []} />
+      <div className="product-main p-4">
+        <h1 className='text-4xl font-medium leading-tight text-gray-900'>{title}</h1>
         <ProductPrice
           price={selectedVariant?.price}
           compareAtPrice={selectedVariant?.compareAtPrice}
@@ -113,11 +113,11 @@ export default function Product() {
         />
         <br />
         <br />
-        <p>
+        <p className="text-gray-700 text-lg font-medium">
           <strong>Description</strong>
         </p>
         <br />
-        <div dangerouslySetInnerHTML={{__html: descriptionHtml}} />
+        <div className="text-gray-600 text-base leading-relaxed" dangerouslySetInnerHTML={{__html: descriptionHtml}} />
         <br />
       </div>
       <Analytics.ProductView
@@ -186,6 +186,15 @@ const PRODUCT_FRAGMENT = `#graphql
     description
     encodedVariantExistence
     encodedVariantAvailability
+    images(first: 10) {
+      nodes {
+        id
+        url
+        altText
+        width
+        height
+      }
+    }
     options {
       name
       optionValues {

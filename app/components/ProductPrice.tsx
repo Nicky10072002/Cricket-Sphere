@@ -8,14 +8,26 @@ export function ProductPrice({
   price?: MoneyV2;
   compareAtPrice?: MoneyV2 | null;
 }) {
+  const discountPercentage =
+    price && compareAtPrice
+      ? ((parseFloat(compareAtPrice.amount) - parseFloat(price.amount)) /
+          parseFloat(compareAtPrice.amount)) *
+        100
+      : null;
   return (
-    <div className="product-price">
+    <div className="product-price mt-3 text-lg font-medium">
       {compareAtPrice ? (
         <div className="product-price-on-sale">
-          {price ? <Money data={price} /> : null}
+          {price ? <Money data={price} className="text-red-600 text-2xl" /> : null}
           <s>
-            <Money data={compareAtPrice} />
+            <Money data={compareAtPrice} className="text-gray-500" />
           </s>
+          {discountPercentage ? (
+            <span className="product-price-discount justify-center font-extrabold text-center bg-amber-950 text-white text-sm ml-2 p-2 rounded-4xl">
+              {Math.round(discountPercentage)}% OFF
+            </span>
+          ) : null}
+
         </div>
       ) : price ? (
         <Money data={price} />

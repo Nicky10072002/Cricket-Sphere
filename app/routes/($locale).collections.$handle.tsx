@@ -70,32 +70,37 @@ export default function Collection() {
   const {collection} = useLoaderData<typeof loader>();
 
   return (
-    <div className="collection">
-      <div className='collection-header'>
+    <div className="collection p-4 md:p-8 lg:p-12 max-w-7xl mx-auto ">
+      <div className='collection-header flex flex-col lg:flex-row justify-between items-center mb-10'>
         <div >
       <h2 className='text-4xl font-bold mt-2 mb-4'>{collection.title}</h2>
       {collection.description && (
-        <p className="text-gray-700 mb-6">{collection.description}</p>
+        <p className="text-gray-700 text-xl mb-6 ">{collection.description}</p>
       )}
           
         </div>
       {collection.image && (
         <Image
           data={collection.image}
-          className="w-full max-w-3xl mb-10 rounded-lg shadow"
+          className="w-full max-w-3xl mb-10 rounded-lg shadow-lg h-100"
         />
       )}
       </div>
       <PaginatedResourceSection<ProductItemFragment>
         connection={collection.products}
-        resourcesClassName="products-grid"
+        resourcesClassName="products-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 rounded-lg p-2 shadow-lg"
+        
       >
         {({node: product, index}) => (
-          <ProductItem
+          <div
             key={product.id}
-            product={product}
-            loading={index < 8 ? 'eager' : undefined}
-          />
+            className="product-item bg-green-50 p-2 rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 "
+          >
+            <ProductItem
+              product={product}
+              loading={index < 8 ? 'eager' : undefined}
+            />
+          </div>
         )}
       </PaginatedResourceSection>
       <Analytics.CollectionView
