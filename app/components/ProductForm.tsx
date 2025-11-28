@@ -1,12 +1,15 @@
 import {Link, useNavigate} from 'react-router';
+import {useState} from 'react';
 import {type MappedProductOptions} from '@shopify/hydrogen';
 import type {
   Maybe,
   ProductOptionValueSwatch,
 } from '@shopify/hydrogen/storefront-api-types';
 import {AddToCartButton} from './AddToCartButton';
+import {ProductQuantity} from './ProductQuantity';
 import {useAside} from './Aside';
 import type {ProductFragment} from 'storefrontapi.generated';
+import { WishlistButton } from './WishlistButton';
 
 export function ProductForm({
   productOptions,
@@ -17,6 +20,7 @@ export function ProductForm({
 }) {
   const navigate = useNavigate();
   const {open} = useAside();
+  const [quantity, setQuantity] = useState(1);
   return (
     <div className="product-form">
       {productOptions.map((option) => {
@@ -101,6 +105,15 @@ export function ProductForm({
           </div>
         );
       })}
+      <ProductQuantity
+        quantity={quantity}
+        min={1}
+        max={10}
+        onChange={setQuantity}
+      />
+      <div className='flex gap-4 w-full p-4 justify-between'>
+        <WishlistButton onClick={() => {}} disabled={false}>Wishlist</WishlistButton>
+        
       <AddToCartButton
         disabled={!selectedVariant || !selectedVariant.availableForSale}
         onClick={() => {
@@ -111,7 +124,7 @@ export function ProductForm({
             ? [
                 {
                   merchandiseId: selectedVariant.id,
-                  quantity: 1,
+                  quantity,
                   selectedVariant,
                 },
               ]
@@ -120,6 +133,8 @@ export function ProductForm({
       >
         {selectedVariant?.availableForSale ? 'Add to cart' : 'Sold out'}
       </AddToCartButton>
+        
+      </div>
     </div>
   );
 }

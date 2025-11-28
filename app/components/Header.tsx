@@ -230,7 +230,7 @@ function SearchToggle() {
   const {open} = useAside();
   return (
     <button 
-      className="p-2.5 rounded-lg text-amber-800 hover:bg-amber-100/80 transition-all duration-200 hover:scale-105"
+      className="p-2.5 rounded-lg text-amber-800 hover:bg-amber-100/80 transition-all duration-200 hover:scale-105 cursor-pointer"
       onClick={() => open('search')}
       aria-label="Search"
     >
