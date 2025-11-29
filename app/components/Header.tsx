@@ -7,6 +7,7 @@ import {
 } from '@shopify/hydrogen';
 import type {HeaderQuery, CartApiQueryFragment} from 'storefrontapi.generated';
 import {useAside} from '~/components/Aside';
+import {useWishlist} from '~/hooks/useWishlist';
 
 interface HeaderProps {
   header: HeaderQuery;
@@ -166,6 +167,7 @@ function HeaderCtas({
       {/* Desktop CTAs */}
       <div className="hidden md:flex items-center space-x-2">
         <SearchToggle />
+        <WishlistToggle />
         <NavLink 
           prefetch="intent" 
           to="/account"
@@ -196,6 +198,7 @@ function HeaderCtas({
       {/* Mobile CTAs */}
       <div className="flex md:hidden items-center space-x-1">
         <SearchToggle />
+        <WishlistToggle />
         <CartToggle cart={cart} />
         <HeaderMenuMobileToggle />
       </div>
@@ -238,6 +241,26 @@ function SearchToggle() {
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
       </svg>
     </button>
+  );
+}
+
+function WishlistToggle() {
+  const { wishlistCount } = useWishlist();
+  return (
+    <NavLink
+      to="/wishlist"
+      className="relative p-2.5 rounded-lg text-amber-800 hover:bg-amber-100/80 transition-all duration-200 hover:scale-105 no-underline"
+      aria-label={`Wishlist with ${wishlistCount} items`}
+    >
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+      </svg>
+      {wishlistCount > 0 && (
+        <span className="absolute -top-1 -right-1 bg-gradient-to-r from-amber-500 to-yellow-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-md">
+          {wishlistCount > 9 ? '9+' : wishlistCount}
+        </span>
+      )}
+    </NavLink>
   );
 }
 

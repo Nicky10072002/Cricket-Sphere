@@ -10,6 +10,7 @@ import {ProductQuantity} from './ProductQuantity';
 import {useAside} from './Aside';
 import type {ProductFragment} from 'storefrontapi.generated';
 import { WishlistButton } from './WishlistButton';
+import { useWishlist } from '~/hooks/useWishlist';
 
 export function ProductForm({
   productOptions,
@@ -21,6 +22,27 @@ export function ProductForm({
   const navigate = useNavigate();
   const {open} = useAside();
   const [quantity, setQuantity] = useState(1);
+  const { addToWishlist, isInWishlist } = useWishlist();
+
+  const handleAddToWishlist = () => {
+    if (!selectedVariant) return;
+    
+    addToWishlist({
+      id: selectedVariant.product.handle,
+      variantId: selectedVariant.id,
+      title: selectedVariant.product.title,
+      handle: selectedVariant.product.handle,
+      price: {
+        amount: selectedVariant.price.amount,
+        currencyCode: selectedVariant.price.currencyCode,
+      },
+      image: selectedVariant.image ? {
+        url: selectedVariant.image.url,
+        altText: selectedVariant.image.altText || undefined,
+      } : undefined,
+      availableForSale: selectedVariant.availableForSale,
+    });
+  };
   return (
     <div className="product-form">
       {productOptions.map((option) => {
@@ -111,9 +133,13 @@ export function ProductForm({
         max={10}
         onChange={setQuantity}
       />
-      <div className='flex gap-4 w-full p-4 justify-between'>
-        <WishlistButton onClick={() => {}} disabled={false}>Wishlist</WishlistButton>
-        
+      <div className='flex gap-4 w-full p-4'>
+        <WishlistButton 
+          onClick={handleAddToWishlist} 
+          disabled={!selectedVariant || isInWishlist(selectedVariant?.id || '')}
+        >
+          {isInWishlist(selectedVariant?.id || '') ? 'In Wishlist' : 'Wishlist'}
+        </WishlistButton>
       <AddToCartButton
         disabled={!selectedVariant || !selectedVariant.availableForSale}
         onClick={() => {
