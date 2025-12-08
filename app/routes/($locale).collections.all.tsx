@@ -51,11 +51,11 @@ export default function Collection() {
   const {products} = useLoaderData<typeof loader>();
 
   return (
-    <div className="collection">
-      <h1>Products</h1>
+    <div className="collection p-6">
+      <h1 className='text-center m-4 text-4xl font-bold'>Products</h1>
       <PaginatedResourceSection<CollectionItemFragment>
         connection={products}
-        resourcesClassName="products-grid"
+        resourcesClassName="products-grid rounded-2xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 aspect-[4/5] max-w-7xl mx-auto bg-gradient-to-b from-amber-700 via-amber-50/30 to-amber-900 p-4"
       >
         {({node: product, index}) => (
           <ProductItem
