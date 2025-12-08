@@ -18,8 +18,8 @@ interface HeroBannerProps {
 export function HeroBanner({image, title, subtitle, buttonLabel, buttonUrl}: HeroBannerProps){
     return(
         <section>
-            <div className='relative'>
-                <Image data={image} sizes="100vw"  />
+            <div className='relative sm:mb-12 md:mb-16 lg:mb-20'>
+                <Image data={image} sizes="100vw" className='' />
                 <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 backdrop-blur-sm bg-white/50 p-8 text-center'>
                     <h2 className='text-4xl font-bold mt-2 mb-4'>{title}</h2>
                     <p className='mt-2 mb-4 text-3xl'>{subtitle}</p>

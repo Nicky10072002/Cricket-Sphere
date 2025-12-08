@@ -40,13 +40,6 @@ export function FeaturedProducts({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-10 md:mb-14">
-          <div className="inline-flex items-center justify-center mb-4">
-            <div className="h-px w-8 md:w-12 bg-gradient-to-r from-transparent to-amber-400"></div>
-            <span className="mx-3 md:mx-4 text-amber-600 font-semibold text-sm md:text-base uppercase tracking-wider">
-              🏏 Best Sellers
-            </span>
-            <div className="h-px w-8 md:w-12 bg-gradient-to-l from-transparent to-amber-400"></div>
-          </div>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-amber-700 via-yellow-600 to-amber-700 bg-clip-text text-transparent mb-3 md:mb-4">
             {title}
           </h2>
@@ -99,17 +92,17 @@ function ProductCard({product, index}: {product: Product; index: number}) {
         animationDelay: `${index * 100}ms`,
       }}
     >
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
         {/* Image Container - Left Side */}
         <Link
           to={`/products/${handle}`}
-          className="relative aspect-square md:aspect-auto overflow-hidden bg-gradient-to-br from-amber-50 to-yellow-50 no-underline"
+          className="relative aspect-square lg:aspect-auto overflow-hidden bg-gradient-to-br from-amber-50 to-yellow-50 no-underline"
         >
           {featuredImage ? (
             <Image
               data={featuredImage}
               aspectRatio="1/1"
-              sizes="(min-width: 768px) 50vw, 100vw"
+              sizes="(min-width: 1024px) 50vw, 100vw"
               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
             />
           ) : (
@@ -150,34 +143,34 @@ function ProductCard({product, index}: {product: Product; index: number}) {
         </Link>
 
         {/* Product Info - Right Side */}
-        <div className="p-6 md:p-8 lg:p-10 flex flex-col justify-center">
+        <div className="p-6 sm:p-8 md:p-10 lg:p-12 flex flex-col justify-center">
           <Link to={`/products/${handle}`} className="no-underline">
-            <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-amber-900 mb-3 md:mb-4 group-hover:text-amber-700 transition-colors duration-300">
+            <h3 className="text-2xl sm:text-3xl md:text-3xl lg:text-4xl font-bold text-amber-900 mb-3 sm:mb-4 group-hover:text-amber-700 transition-colors duration-300">
               {title}
             </h3>
           </Link>
           
           {/* Description */}
           {description && (
-            <p className="text-amber-800/80 text-sm md:text-base lg:text-lg leading-relaxed mb-4 md:mb-6 line-clamp-3">
+            <p className="text-amber-800/80 text-sm sm:text-base md:text-base lg:text-lg leading-relaxed mb-4 sm:mb-5 md:mb-6 line-clamp-3">
               {description}
             </p>
           )}
 
           {/* Price */}
-          <div className="flex items-baseline gap-3 mb-6 md:mb-8">
+          <div className="flex items-baseline gap-3 mb-5 sm:mb-6 md:mb-8">
             <Money
               data={priceRange.minVariantPrice}
-              className="text-xl md:text-2xl lg:text-3xl font-bold text-amber-600 p-4"
+              className="text-xl sm:text-2xl md:text-2xl lg:text-3xl font-bold text-amber-600"
             />
-            <span className="text-amber-600/60 text-sm md:text-base">Starting from</span>
+            <span className="text-amber-600/60 text-xs sm:text-sm md:text-base">Starting from</span>
           </div>
 
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
             <Link
               to={`/products/${handle}`}
-              className="flex-1 py-3 md:py-4 px-6 bg-gradient-to-r from-amber-500 to-yellow-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2 no-underline"
+              className="flex-1 py-3 sm:py-3.5 md:py-4 px-4 sm:px-5 md:px-6 bg-gradient-to-r from-amber-500 to-yellow-500 text-white font-semibold text-sm sm:text-base rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2 no-underline"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -186,7 +179,7 @@ function ProductCard({product, index}: {product: Product; index: number}) {
             </Link>
             <Link
               to={`/products/${handle}`}
-              className="py-3 md:py-4 px-6 bg-white border-2 border-amber-500 text-amber-700 font-semibold rounded-xl hover:bg-amber-50 transition-all duration-300 flex items-center justify-center gap-2 no-underline"
+              className="py-3 sm:py-3.5 md:py-4 px-4 sm:px-5 md:px-6 bg-white border-2 border-amber-500 text-amber-700 font-semibold text-sm sm:text-base rounded-xl hover:bg-amber-50 transition-all duration-300 flex items-center justify-center gap-2 no-underline"
             >
               <span>View Details</span>
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

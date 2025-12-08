@@ -10,6 +10,7 @@ import {ProductItem} from '~/components/ProductItem';
 import {FeaturedProducts} from '~/components/featuredProduct';
 import { BlogPost } from '~/components/BlogPost';
 import {HeroBanner} from '~/components/Hero-Banner';
+import { BestSellerSection } from '~/components/BestSellerSection';
 export const meta: Route.MetaFunction = () => {
   return [{title: 'Hydrogen | Home'}];
 };
@@ -53,6 +54,13 @@ function loadDeferredData({context}: Route.LoaderArgs) {
       return null;
     });
 
+  const bestsellerProducts = context.storefront
+    .query(BESTSELLER_PRODUCTS_QUERY)
+    .catch((error: Error) => {
+      console.error(error);
+      return null;
+    });
+
   const blogs = context.storefront
     .query(BLOGS_QUERY)
     .catch((error: Error) => {
@@ -62,6 +70,7 @@ function loadDeferredData({context}: Route.LoaderArgs) {
 
   return {
     recommendedProducts,
+    bestsellerProducts,
     blogs,
   };
 }
@@ -85,6 +94,7 @@ export default function Homepage() {
       />
       {/* <FeaturedCollection collection={data.featuredCollection} /> */}
       <RecommendedProducts products={data.recommendedProducts} />
+      <BestsellerProducts products={data.bestsellerProducts} />
       <BlogPosts blogs={data.blogs} />
     </div>
   );
@@ -139,6 +149,34 @@ function RecommendedProducts({
   );
 }
 
+function BestsellerProducts({
+  products,
+}: {
+  products: Promise<any>;
+}) {
+  return (
+    <Suspense fallback={
+      <div className="py-12 md:py-16 lg:py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-amber-500 border-t-transparent"></div>
+            <p className="mt-4 text-amber-800">Loading bestsellers...</p>
+          </div>
+        </div>
+      </div>
+    }>
+      <Await resolve={products}>
+        {(response) => (
+          response && response.products.nodes.length > 0 ? (
+            <BestSellerSection products={response.products} />
+          ) : null
+        )}
+      </Await>
+    </Suspense>
+
+  );
+}
+
 function BlogPosts({blogs}: {blogs: Promise<any>}) {
   return (
     <Suspense fallback={
@@ -155,34 +193,13 @@ function BlogPosts({blogs}: {blogs: Promise<any>}) {
         {(response) => {
           console.log('Blog response:', response);
           
-          if (!response) {
-            console.log('No response from blogs query');
-            return null;
-          }
-          
-          if (!response.blogs) {
-            console.log('No blogs object in response');
-            return null;
-          }
-          
-          if (!response.blogs.nodes || response.blogs.nodes.length === 0) {
-            console.log('No blog nodes found - make sure you have created a blog in Shopify Admin');
+          // Check if we have valid blog data
+          if (!response?.blogs?.nodes?.[0]?.articles?.nodes?.length) {
+            console.log('No blog articles found');
             return null;
           }
           
           const blog = response.blogs.nodes[0];
-          console.log('Blog data:', blog);
-          
-          if (!blog.articles) {
-            console.log('No articles object in blog');
-            return null;
-          }
-          
-          if (!blog.articles.nodes || blog.articles.nodes.length === 0) {
-            console.log('No articles found - make sure you have published blog posts');
-            return null;
-          }
-          
           const blogPosts = blog.articles.nodes.map((article: any) => ({
             id: article.id,
             title: article.title,
@@ -196,6 +213,8 @@ function BlogPosts({blogs}: {blogs: Promise<any>}) {
             image: article.image?.url || undefined,
             handle: article.handle,
           }));
+          
+          console.log('Rendering blog posts:', blogPosts);
           
           return (
             <section className="py-12 md:py-16 lg:py-20 bg-gradient-to-b from-amber-50/30 via-white to-amber-50/30">
@@ -304,6 +323,37 @@ const RECOMMENDED_PRODUCTS_QUERY = `#graphql
     products(first: 8, sortKey: UPDATED_AT, reverse: true, query: "tag:featured") {
       nodes {
         ...RecommendedProduct
+      }
+    }
+  }
+` as const;
+
+const BESTSELLER_PRODUCTS_QUERY = `#graphql
+  fragment Bestsellerproduct on Product {
+    id
+    title
+    handle
+    description
+    descriptionHtml
+    priceRange {
+      minVariantPrice {
+        amount
+        currencyCode
+      }
+    }
+    featuredImage {
+      id
+      url
+      altText
+      width
+      height
+    }
+  }
+  query BestsellerProducts($country: CountryCode, $language: LanguageCode)
+    @inContext(country: $country, language: $language) {
+    products(first: 4, sortKey: UPDATED_AT, reverse: true, query: "tag:bestseller") {
+      nodes {
+        ...Bestsellerproduct
       }
     }
   }
