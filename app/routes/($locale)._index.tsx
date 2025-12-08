@@ -8,6 +8,7 @@ import type {
 } from 'storefrontapi.generated';
 import {ProductItem} from '~/components/ProductItem';
 import {FeaturedProducts} from '~/components/featuredProduct';
+import {BestsellerSection} from '~/components/BestsellerSection';
 import { BlogPost } from '~/components/BlogPost';
 import {HeroBanner} from '~/components/Hero-Banner';
 import { BestSellerSection } from '~/components/BestSellerSection';
@@ -93,6 +94,7 @@ export default function Homepage() {
         buttonUrl="/collections/all"
       />
       {/* <FeaturedCollection collection={data.featuredCollection} /> */}
+      <BestsellerProducts products={data.bestsellerProducts} />
       <RecommendedProducts products={data.recommendedProducts} />
       <BestsellerProducts products={data.bestsellerProducts} />
       <BlogPosts blogs={data.blogs} />
@@ -121,6 +123,33 @@ export default function Homepage() {
 //     </Link>
 //   );
 // }
+
+function BestsellerProducts({
+  products,
+}: {
+  products: Promise<any>;
+}) {
+  return (
+    <Suspense fallback={
+      <div className="py-12 md:py-16 lg:py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-amber-500 border-t-transparent"></div>
+            <p className="mt-4 text-amber-800">Loading bestsellers...</p>
+          </div>
+        </div>
+      </div>
+    }>
+      <Await resolve={products}>
+        {(response) => (
+          response && response.products.nodes.length > 0 ? (
+            <BestsellerSection products={response.products.nodes} />
+          ) : null
+        )}
+      </Await>
+    </Suspense>
+  );
+}
 
 function RecommendedProducts({
   products,
@@ -384,6 +413,37 @@ const BLOGS_QUERY = `#graphql
             }
           }
         }
+      }
+    }
+  }
+` as const;
+
+const BESTSELLER_PRODUCTS_QUERY = `#graphql
+  fragment BestsellerProduct on Product {
+    id
+    title
+    handle
+    description
+    descriptionHtml
+    priceRange {
+      minVariantPrice {
+        amount
+        currencyCode
+      }
+    }
+    featuredImage {
+      id
+      url
+      altText
+      width
+      height
+    }
+  }
+  query BestsellerProducts ($country: CountryCode, $language: LanguageCode)
+    @inContext(country: $country, language: $language) {
+    products(first: 5, sortKey: UPDATED_AT, reverse: true, query: "tag:bestseller") {
+      nodes {
+        ...BestsellerProduct
       }
     }
   }
