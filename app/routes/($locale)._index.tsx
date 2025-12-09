@@ -2,16 +2,10 @@ import {Await, useLoaderData, Link} from 'react-router';
 import type {Route} from './+types/_index';
 import {Suspense} from 'react';
 import {Image} from '@shopify/hydrogen';
-import type {
-  FeaturedCollectionFragment,
-  RecommendedProductsQuery,
-} from 'storefrontapi.generated';
-import {ProductItem} from '~/components/ProductItem';
 import {FeaturedProducts} from '~/components/featuredProduct';
-import {BestsellerSection} from '~/components/BestsellerSection';
-import { BlogPost } from '~/components/BlogPost';
+import {BestSellerSection} from '~/components/BestSellerSection';
+import {BlogPost} from '~/components/BlogPost';
 import {HeroBanner} from '~/components/Hero-Banner';
-import { BestSellerSection } from '~/components/BestSellerSection';
 export const meta: Route.MetaFunction = () => {
   return [{title: 'Hydrogen | Home'}];
 };
@@ -94,9 +88,8 @@ export default function Homepage() {
         buttonUrl="/collections/all"
       />
       {/* <FeaturedCollection collection={data.featuredCollection} /> */}
-      <BestsellerProducts products={data.bestsellerProducts} />
       <RecommendedProducts products={data.recommendedProducts} />
-      <BestsellerProducts products={data.bestsellerProducts} />
+      <Bestsellerproducts products={data.bestsellerProducts} />
       <BlogPosts blogs={data.blogs} />
     </div>
   );
@@ -124,37 +117,10 @@ export default function Homepage() {
 //   );
 // }
 
-function BestsellerProducts({
-  products,
-}: {
-  products: Promise<any>;
-}) {
-  return (
-    <Suspense fallback={
-      <div className="py-12 md:py-16 lg:py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-amber-500 border-t-transparent"></div>
-            <p className="mt-4 text-amber-800">Loading bestsellers...</p>
-          </div>
-        </div>
-      </div>
-    }>
-      <Await resolve={products}>
-        {(response) => (
-          response && response.products.nodes.length > 0 ? (
-            <BestsellerSection products={response.products.nodes} />
-          ) : null
-        )}
-      </Await>
-    </Suspense>
-  );
-}
-
 function RecommendedProducts({
   products,
 }: {
-  products: Promise<RecommendedProductsQuery | null>;
+  products: Promise<any>;
 }) {
   return (
     <Suspense fallback={
@@ -178,7 +144,7 @@ function RecommendedProducts({
   );
 }
 
-function BestsellerProducts({
+function Bestsellerproducts({
   products,
 }: {
   products: Promise<any>;
@@ -357,37 +323,6 @@ const RECOMMENDED_PRODUCTS_QUERY = `#graphql
   }
 ` as const;
 
-const BESTSELLER_PRODUCTS_QUERY = `#graphql
-  fragment Bestsellerproduct on Product {
-    id
-    title
-    handle
-    description
-    descriptionHtml
-    priceRange {
-      minVariantPrice {
-        amount
-        currencyCode
-      }
-    }
-    featuredImage {
-      id
-      url
-      altText
-      width
-      height
-    }
-  }
-  query BestsellerProducts($country: CountryCode, $language: LanguageCode)
-    @inContext(country: $country, language: $language) {
-    products(first: 4, sortKey: UPDATED_AT, reverse: true, query: "tag:bestseller") {
-      nodes {
-        ...Bestsellerproduct
-      }
-    }
-  }
-` as const;
-
 const BLOGS_QUERY = `#graphql
   query Blogs($country: CountryCode, $language: LanguageCode)
     @inContext(country: $country, language: $language) {
@@ -437,6 +372,17 @@ const BESTSELLER_PRODUCTS_QUERY = `#graphql
       altText
       width
       height
+    }
+    variants(first: 10) {
+      nodes {
+        id
+        title
+        availableForSale
+        price {
+          amount
+          currencyCode
+        }
+      }
     }
   }
   query BestsellerProducts ($country: CountryCode, $language: LanguageCode)
