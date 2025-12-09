@@ -202,7 +202,7 @@ export function QuickCartModal({product, isOpen, onClose}: QuickCartModalProps) 
                   −
                 </button>
                 <input
-                  type="number"
+                  type="string"
                   min="1"
                   value={quantity}
                   onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
@@ -228,7 +228,7 @@ export function QuickCartModal({product, isOpen, onClose}: QuickCartModalProps) 
                   type="submit"
                   onClick={handleAddToCart}
                   disabled={!selectedVariantId || fetcher.state !== 'idle'}
-                  className={`w-full py-4 px-6 rounded-xl font-bold text-white transition-all duration-300 flex items-center justify-center gap-2 ${
+                  className={`w-full py-4 px-6 rounded-xl font-bold text-white transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer ${
                     isAdded
                       ? 'bg-green-500 hover:bg-green-600'
                       : 'bg-gradient-to-r from-amber-500 to-yellow-500 hover:shadow-xl hover:scale-105'

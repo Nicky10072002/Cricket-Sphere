@@ -8,6 +8,7 @@ import {
 import type {HeaderQuery, CartApiQueryFragment} from 'storefrontapi.generated';
 import {useAside} from '~/components/Aside';
 import {useWishlist} from '~/hooks/useWishlist';
+import {CircleUserRound} from 'lucide-react';
 
 interface HeaderProps {
   header: HeaderQuery;
@@ -36,7 +37,7 @@ export function Header({
             end
             className="flex items-center space-x-2 group no-underline"
           >
-            <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-amber-400 to-yellow-500 rounded-xl flex items-center justify-center shadow-md group-hover:shadow-lg transition-all duration-300 group-hover:scale-105">
+            <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-r from-amber-400 to-yellow-500 rounded-xl flex items-center justify-center shadow-md group-hover:shadow-lg transition-all duration-300 group-hover:scale-105">
               <span className="text-white font-bold text-xl md:text-2xl">🏏</span>
             </div>
             <span className="text-xl md:text-2xl font-bold bg-gradient-to-r from-amber-700 to-yellow-700 bg-clip-text text-transparent">
@@ -179,15 +180,16 @@ function HeaderCtas({
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
             </svg>
           }>
-            <Await resolve={isLoggedIn} errorElement={
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-              </svg>
-            }>
+            <Await resolve={isLoggedIn}>
               {(isLoggedIn) => (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                </svg>
+                <NavLink
+        prefetch="intent"
+        to={isLoggedIn ? "/account" : "/login"}
+        className="p-2.5 rounded-lg text-amber-800 hover:bg-amber-100/80 transition-all duration-200 hover:scale-105 no-underline"
+        title="Account"
+      >
+        <CircleUserRound />
+      </NavLink>
               )}
             </Await>
           </Suspense>

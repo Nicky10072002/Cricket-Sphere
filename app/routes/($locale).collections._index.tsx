@@ -46,20 +46,34 @@ export default function Collections() {
   const {collections} = useLoaderData<typeof loader>();
 
   return (
-    <div className="collections">
-      <h1>Collections</h1>
-      <PaginatedResourceSection<CollectionFragment>
-        connection={collections}
-        resourcesClassName="collections-grid"
-      >
-        {({node: collection, index}) => (
-          <CollectionItem
-            key={collection.id}
-            collection={collection}
-            index={index}
-          />
-        )}
-      </PaginatedResourceSection>
+    <div className="min-h-screen w-full bg-gradient-to-b from-amber-50 via-white to-amber-50/30">
+      {/* Hero Section */}
+      <div className="bg-gradient-to-r from-amber-500 to-orange-500 py-16 px-4">
+        <div className="max-w-7xl mx-auto text-center">
+          <h1 className="text-5xl md:text-6xl font-bold text-white mb-4 drop-shadow-lg">
+            Our Collections
+          </h1>
+          <p className="text-xl text-white/90 max-w-2xl mx-auto">
+            Explore our curated selection of premium cricket gear and equipment
+          </p>
+        </div>
+      </div>
+
+      {/* Collections Grid */}
+      <div className="max-w-7xl mx-auto px-4 py-12">
+        <PaginatedResourceSection<CollectionFragment>
+          connection={collections}
+          resourcesClassName="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12"
+        >
+          {({node: collection, index}) => (
+            <CollectionItem
+              key={collection.id}
+              collection={collection}
+              index={index}
+            />
+          )}
+        </PaginatedResourceSection>
+      </div>
     </div>
   );
 }
@@ -73,21 +87,40 @@ function CollectionItem({
 }) {
   return (
     <Link
-      className="collection-item"
+      className="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 bg-white"
       key={collection.id}
       to={`/collections/${collection.handle}`}
       prefetch="intent"
     >
-      {collection?.image && (
-        <Image
-          alt={collection.image.altText || collection.title}
-          aspectRatio="1/1"
-          data={collection.image}
-          loading={index < 3 ? 'eager' : undefined}
-          sizes="(min-width: 45em) 400px, 100vw"
-        />
-      )}
-      <h5>{collection.title}</h5>
+      <div className="relative aspect-square overflow-hidden">
+        {collection?.image && (
+          <>
+            <Image
+              alt={collection.image.altText || collection.title}
+              aspectRatio="1/1"
+              data={collection.image}
+              loading={index < 3 ? 'eager' : undefined}
+              sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+            />
+            {/* Overlay gradient */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          </>
+        )}
+      </div>
+      
+      {/* Title Section */}
+      <div className="absolute bottom-0 left-0 right-0 p-6 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+        <h3 className="text-2xl font-bold text-white drop-shadow-lg">
+          {collection.title}
+        </h3>
+        <div className="flex items-center mt-2 text-white/90 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <span className="text-sm font-medium">Explore Collection</span>
+          <svg className="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          </svg>
+        </div>
+      </div>
     </Link>
   );
 }
